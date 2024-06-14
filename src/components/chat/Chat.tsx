@@ -89,7 +89,7 @@ export default function Chat() {
                 //for recieve msg
 
                 try {
-                  let listenerID: string = "hello ";
+                  let listenerID: string = "hello";
                   CometChat.addMessageListener(
                     listenerID,
                     new CometChat.MessageListener({
