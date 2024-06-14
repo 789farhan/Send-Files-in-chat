@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 export default function Chat() {
   const CheckUser = async () => {
-   const [inputfile, setinputfile] = useState('')
-    useEffect(()=>{
-      let file=document.getElementById("inputImg")
-      // setinputfile(file?.files[0]);
-      console.log(file);
-    },[])
+    //  const [inputfile, setinputfile] = useState('')
+    // useEffect(()=>{
+    //   let file=document.getElementById("inputImg")
+    //   setinputfile(file?.files[0]);
+    //   console.log(file);
+    // },[])
     let appID: string = "259111d0d926df20",
       region: string = "eu",
       appSetting: CometChat.AppSettings = new CometChat.AppSettingsBuilder()
@@ -59,37 +59,69 @@ export default function Chat() {
               // send messages
               // for send msg we need 3 Arguments (recieverID,recieverType,message)
               try {
-                let receiverID: string = "chat",
-                  messageText: string = "hi shabana!",
-                  receiverType: string = CometChat.RECEIVER_TYPE.GROUP,
-                  textMessage: CometChat.TextMessage =
-                    new CometChat.TextMessage(
+                let receiverID: string = "hello",
+                  customData: Object = {
+                    latitude: "50.6192171633316yty *^W^W||||X",
+                    longitude: "-72.68182268750002",
+                  },
+                  customType: string = "location",
+                  receiverType: string = CometChat.RECEIVER_TYPE.USER,
+                  customMessage: CometChat.CustomMessage =
+                    new CometChat.CustomMessage(
                       receiverID,
-                      messageText,
-                      receiverType
+                      receiverType,
+                      customType,
+                      customData
                     );
 
-                // Add or send  Metadata
-
-                // let metadata: Object = {
-                //   latitude: "50.6192171633316",
-                //   longitude: "-72.68182268750002",
-                // };
-                // textMessage.setMetadata(metadata);
-
-                // Add or send  tags
-
-                // let tags: Array<String> = ["starredMessage"];
-                // textMessage.setTags(tags);
-
-                CometChat.sendMessage(textMessage).then(
-                  (message: any) => {
-                    console.log("Message sent successfully:", message);
+                CometChat.sendCustomMessage(customMessage).then(
+                  (message) => {
+                    console.log("custom message sent successfully", message);
                   },
                   (error: CometChat.CometChatException) => {
-                    console.log("Message sending failed with error:", error);
+                    console.log(
+                      "custom message sending failed with error",
+                      error
+                    );
                   }
                 );
+
+                //for recieve msg
+
+                try {
+                  let listenerID: string = "hello ";
+                  CometChat.addMessageListener(
+                    listenerID,
+                    new CometChat.MessageListener({
+                      onTextMessageReceived: (
+                        textMessage: CometChat.TextMessage
+                      ) => {
+                        console.log(
+                          "Text message received successfully",
+                          textMessage
+                        );
+                      },
+                      onMediaMessageReceived: (
+                        mediaMessage: CometChat.MediaMessage
+                      ) => {
+                        console.log(
+                          "Media message received successfully",
+                          mediaMessage
+                        );
+                      },
+                      onCustomMessageReceived: (
+                        customMessage: CometChat.CustomMessage
+                      ) => {
+                        console.log(
+                          "Custom message received successfully",
+                          customMessage
+                        );
+                      },
+                    })
+                  );
+                } catch (error) {
+                  console.log(error);
+                }
               } catch (error) {
                 console.log(error);
               }
@@ -107,8 +139,8 @@ export default function Chat() {
   };
   return (
     <div>
-      {/* <button onClick={CheckUser}>Click on Me</button> */}
-      <input type="image" id="inputImg" title="inputimg"/>
+      <button onClick={CheckUser}>Click on Me</button>
+      {/* <input type="image" id="inputImg" title="inputimg"/> */}
     </div>
   );
 }
